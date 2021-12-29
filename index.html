@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="charater.js"></script>
+    <script src="division.js"></script>
+    <script src="multiplication.js"></script>
+    <script src="subtraction.js"></script>
+    <script src="sum.js"></script>
+</head>
+<body>
+<canvas id="myCanvas" width="800" height="300" style=" border: 1px solid black"></canvas>
+<script>
+    let canvas = document.getElementById("myCanvas");
+    let ctx = canvas.getContext("2d");
+    let myCharater = new Charater(250, 100, 50, 50, 'img/charater.png', 10);
+    let mySum = new Sum(500, 25, 50, 50, 'img/sum.jpg');
+    let mySubtraction = new Subtraction(500, 100, 50, 50, 'img/Subtraction.jpg');
+    let myMultiplication = new Multiplication(500, 175, 50, 50, 'img/Multiplication.jpg');
+    let myDivision = new Division(500, 250, 50, 50, 'img/Division.jpg');
+    let backGround = new Image();
+    let score = 0;
+    backGround.src = 'https://png.pngtree.com/thumb_back/fw800/background/20200320/pngtree-3d-puzzle-lego-toy-building-blocks-game-background-image_332234.jpg'
+    mySum.drawSum(ctx);
+    mySubtraction.drawSubtraction(ctx);
+    myMultiplication.drawMultiplication(ctx);
+    myDivision.drawDivision(ctx);
+    myCharater.drawCharater(ctx);
+
+    function background() {
+        ctx.drawImage(backGround, 0, 0, 800, 300);
+    }
+    function updateCanvas() {
+        clearCanvas();
+        background();
+        drawScore();
+        mySum.drawSum(ctx);
+        mySubtraction.drawSubtraction(ctx);
+        myMultiplication.drawMultiplication(ctx);
+        myDivision.drawDivision(ctx);
+        myCharater.drawCharater(ctx);
+    }
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, 800, 300);
+    }
+
+    function moveCharater(event) {
+        switch (event.keyCode) {
+            case 37: {
+                if (myCharater.x < 0) {
+                    return;
+                }
+                myCharater.moveLeft();
+                myCharater.src = 'img/babyleft.png'
+                break;
+            }
+
+            case 39: {
+                if (myCharater.x + myCharater.width > canvas.clientWidth) {
+                    return;
+                }
+                myCharater.moveRight();
+                myCharater.src = 'img/charater.png'
+                break;
+            }
+            case 38: {
+                myCharater.moveUp();
+                break;
+            }
+            case 40: {
+                myCharater.moveDown();
+                break;
+            }
+        }
+        calculation();
+        updateCanvas();
+    }
+
+    function checkCollision() {
+        if (myCharater._y + myCharater._height > mySum._y &&
+            myCharater._y < mySum._y + mySum._height &&
+            myCharater._x + myCharater._width > mySum._x &&
+            myCharater._x < mySum._x + mySum._width) {
+            return true;
+        }
+    }
+
+    function checkCollision2() {
+        if (myCharater._y + myCharater._height > mySubtraction._y &&
+            myCharater._y < mySubtraction._y + mySubtraction._height &&
+            myCharater._x + myCharater._width > mySubtraction._x &&
+            myCharater._x < mySubtraction._x + mySubtraction._width) {
+            return true;
+        }
+    }
+
+    function checkCollision3() {
+        if (myCharater._y + myCharater._height > myMultiplication._y &&
+            myCharater._y < myMultiplication._y + myMultiplication._height &&
+            myCharater._x + myCharater._width > myMultiplication._x &&
+            myCharater._x < myMultiplication._x + myMultiplication._width) {
+            return true;
+        }
+    }
+
+    function checkCollision4() {
+        if (myCharater._y + myCharater._height > myDivision._y &&
+            myCharater._y < myDivision._y + myDivision._height &&
+            myCharater._x + myCharater._width > myDivision._x &&
+            myCharater._x < myDivision._x + myDivision._width) {
+            return true;
+        }
+    }
+
+
+    function calculation() {
+        updateCanvas();
+        if (checkCollision()) {
+            let sum = prompt("1 + 1=?");
+            if (sum == 2) {
+                alert("Đúng");
+                score+=20;
+            } else {
+                alert("Sai");
+            }
+        }
+        if (checkCollision2()) {
+            let sub = prompt("1.5 - 1=?");
+            if (sub == 0.5) {
+                alert("Đúng");
+                score+=20;
+            } else {
+                alert("Sai");
+            }
+        }
+        if (checkCollision3()) {
+            let mul = prompt("2 x 2 =?");
+            if (mul == 4) {
+                alert("Đúng");
+                score+=20;
+            } else {
+                alert("Sai");
+            }
+        }
+        if (checkCollision4()) {
+            let div = prompt("2 : 2 =?");
+            if (div == 1) {
+                alert("Đúng");
+                score+=20;
+            } else {
+                alert("Sai");
+            }
+        }
+    }
+
+    function drawScore(){
+        ctx.fillStyle = "Red"
+        ctx.font="bold 16px arial"
+        ctx.fillText("Score: " + score, 350,250);
+    }
+
+    document.addEventListener('keydown', moveCharater);
+</script>
+</body>
+</html>
